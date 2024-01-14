@@ -1,5 +1,7 @@
 /dev/data
 /.idea
+/dev/test-api-docker/nodered_forge/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -14,3 +14,11 @@ services:
     volumes:
       - ./data/data:/data
       - ./data/modules:/modules
+  test_api:
+    build: ./test-api-docker
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data/modules:/modules
+      - ../nodered_forge:/app/nodered_forge
+      - ./test-api-docker/test_api_app.py:/app/test_api_app.py
