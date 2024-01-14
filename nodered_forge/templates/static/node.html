@@ -1,0 +1,50 @@
+<script type="text/javascript">
+    RED.nodes.registerType('{{ node.name }}', {
+        category: '{{ node.category }}',
+        color: '{{ node.color }}',
+        defaults: {
+            name: {value: ""},
+            prefix: {value: ""}
+        },
+        credentials: {
+            username: {type: "text"},
+            password: {type: "password"}
+        },
+        inputs: 1,
+        outputs: 1,
+        outputLabels: ["parsed JSON object"],
+        icon: '{{ node.icon }}',
+        label: function () {
+            return this.name || "{{ node.name }}";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="{{ node.name }}">
+    <h3>Node Name:</h3>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <h3>Authentication:</h3>
+    <div class="form-row">
+        <label for="node-input-username"><i class="fa fa-tag"></i> Username</label>
+        <input type="text" id="node-input-username">
+    </div>
+    <div class="form-row">
+        <label for="node-input-password"><i class="fa fa-tag"></i> Password</label>
+        <input type="password" id="node-input-password">
+    </div>
+    <hr>
+    <h3>Parameters:</h3>
+    <div class="form-row">
+        <label for="node-input-prefix"><i class="fa fa-tag"></i> Prefix</label>
+        <input type="text" id="node-input-prefix">
+    </div>
+
+</script>
+
+
+<script type="text/html" data-help-name="{{ node.name }}">
+    <p>{{ node.description }}</p>
+</script>

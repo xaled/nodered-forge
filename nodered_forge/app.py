@@ -1,0 +1,47 @@
+from typing import List
+
+from .node import CustomAPINode
+from .utils import to_js_package_name
+from os.path import join, abspath
+from os import makedirs
+import json
+
+
+class NodeForgeApp:
+    def __init__(self, name, base_url, ignore_ssl_errors=False, auth_type=None, default_category=None,
+                 package_name=None):
+        self.name = name
+        self.base_url = base_url
+        self.ignore_ssl_errors = ignore_ssl_errors
+        self.auth_type = auth_type
+        self.default_category = default_category
+        self.api_nodes: List[CustomAPINode] = list()
+        self.package_name = package_name or f"node-red-contrib-nodered-forge-{to_js_package_name(name)}"
+
+    def register_api_node(self, name, route, method='GET', body_schema=None, **kwargs):
+        self.api_nodes.append(
+            CustomAPINode(self, name, route, method=method, body_schema=body_schema, **kwargs))
+
+    def api_node(self, route, name=None, method='GET', body_schema=None,  **kwargs):
+        def decorator(func):
+            self.register_api_node(name or func.__name__, route, method=method, body_schema=body_schema, **kwargs)
+            return func
+
+        return decorator
+
+    def output_package(self, output_dir):
+        output_dir = abspath(output_dir)
+        pacakge_dir = join(output_dir, self.package_name)
+        makedirs(pacakge_dir, exist_ok=True)
+
+        # package.json
+        package_json_path = join(pacakge_dir, 'package.json')
+        with open(package_json_path, 'w') as fou:
+            json.dump({
+                "name": self.package_name,
+                "node-red": dict(nodes={node.name: f"{node.name}.js" for node in self.api_nodes})
+            }, fou, indent=3)
+
+        # nodes files
+        for node in self.api_nodes:
+            node.output_node_files(pacakge_dir)
