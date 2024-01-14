@@ -1,8 +1,9 @@
+import shutil
 from typing import List
 
 from .node import CustomAPINode
 from .utils import to_js_package_name
-from os.path import join, abspath
+from os.path import join, abspath, exists
 from os import makedirs
 import json
 
@@ -32,7 +33,10 @@ class NodeForgeApp:
     def output_package(self, output_dir):
         output_dir = abspath(output_dir)
         pacakge_dir = join(output_dir, self.package_name)
-        makedirs(pacakge_dir, exist_ok=True)
+        if exists(pacakge_dir):
+            shutil.rmtree(pacakge_dir)
+
+        makedirs(pacakge_dir)
 
         # package.json
         package_json_path = join(pacakge_dir, 'package.json')
