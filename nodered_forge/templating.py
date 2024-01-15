@@ -18,7 +18,13 @@ def to_json(value):
     return json.dumps(value)
 
 
+def to_title(value):
+    value = value.replace('-', ' ').replace('_', ' ')
+    return value[0].upper() + value[1:]
+
+
 jinja2_env.filters['json'] = to_json
+jinja2_env.filters['title'] = to_title
 
 
 # # Example: Add global variables to the environment

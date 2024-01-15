@@ -24,7 +24,7 @@ def get_todos():
     return jsonify({'todos': todos})
 
 
-@nodered_api.api_node('/todos/<int:todo_id>', method='GET')
+@nodered_api.api_node('/todos/<str:prefix:2>', method='GET')
 @flask_app.route('/todos/<int:todo_id>', methods=['GET'])
 def get_todo(todo_id):
     todo = next((item for item in todos if item['id'] == todo_id), None)
@@ -34,7 +34,7 @@ def get_todo(todo_id):
         return jsonify({'message': 'Todo not found'}), 404
 
 
-@nodered_api.api_node('/todos', method='POST', body_schema=[
+@nodered_api.api_node('/todos', method='POST', parameters_config=[
     'str:text',
     'date:due_date',
     'text_editor:notes',
@@ -62,7 +62,7 @@ def create_todo():
     return jsonify({'todo': new_todo}), 201
 
 
-@nodered_api.api_node('/todos/<int:todo_id>', method='PUT', body_schema=[
+@nodered_api.api_node('/todos/<int:todo_id>', method='PUT', parameters_config=[
     'str:text',
     'date:due_date',
     'text_editor:notes',
@@ -102,4 +102,5 @@ def delete_todo(todo_id):
 
 if __name__ == '__main__':
     nodered_api.output_package('/modules')
+    # nodered_api.output_package('modules')
     flask_app.run(host="0.0.0.0", debug=True)

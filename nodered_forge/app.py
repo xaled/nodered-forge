@@ -19,13 +19,13 @@ class NodeForgeApp:
         self.api_nodes: List[CustomAPINode] = list()
         self.package_name = package_name or f"node-red-contrib-nodered-forge-{to_js_package_name(name)}"
 
-    def register_api_node(self, name, route, method='GET', body_schema=None, **kwargs):
+    def register_api_node(self, name, route, method='GET', parameters_config=None, **kwargs):
         self.api_nodes.append(
-            CustomAPINode(self, name, route, method=method, body_schema=body_schema, **kwargs))
+            CustomAPINode(self, name, route, method=method, parameters_config=parameters_config, **kwargs))
 
-    def api_node(self, route, name=None, method='GET', body_schema=None,  **kwargs):
+    def api_node(self, route, name=None, method='GET', parameters_config=None,  **kwargs):
         def decorator(func):
-            self.register_api_node(name or func.__name__, route, method=method, body_schema=body_schema, **kwargs)
+            self.register_api_node(name or func.__name__, route, method=method, parameters_config=parameters_config, **kwargs)
             return func
 
         return decorator
