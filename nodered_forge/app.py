@@ -4,6 +4,7 @@ from os.path import join, abspath, exists
 from os import makedirs
 import json
 
+from .input import NodeParameter
 from .node import CustomAPINode
 from .utils import to_js_package_name, generate_bright_color
 
@@ -13,7 +14,7 @@ DEFAULT_ICON = "font-awesome/fa-globe"
 class NodeForgeApp:
     def __init__(self, name, base_url, ignore_ssl_errors=False, auth_type=None,
                  package_name=None,
-                 default_icon=None, default_color=None, default_category=None):
+                 default_icon=None, default_color=None, default_category=None, global_parameters_config=None):
         self.name = name
         self.base_url = base_url
         self.ignore_ssl_errors = ignore_ssl_errors
@@ -24,6 +25,8 @@ class NodeForgeApp:
         self.api_nodes: List[CustomAPINode] = list()
         self.package_name = package_name or f"node-red-contrib-nodered-forge-{to_js_package_name(name)}"
         self.node_name_prefix = f"{to_js_package_name(name)}-"
+        self.global_parameters = [NodeParameter.from_parm_init(param_init) for param_init in
+                                  global_parameters_config or list()]
 
     def register_api_node(self, name, route, method='GET', parameters_config=None, **kwargs):
         self.api_nodes.append(

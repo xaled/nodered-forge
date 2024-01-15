@@ -1,9 +1,13 @@
 from flask import Flask, jsonify, request
 
-from nodered_forge import NodeForgeApp
+from nodered_forge import NodeForgeApp, NodeParameter, InputType
 
 flask_app = Flask(__name__)
-nodered_api = NodeForgeApp("TestTodoApi", "http://test_api:5000", default_icon="fa-check-square-o")
+nodered_api = NodeForgeApp(
+    "TestTodoApi", "http://test_api:5000", default_icon="fa-check-square-o",
+    global_parameters_config=[
+        NodeParameter(name="pretty", type=InputType.BOOL, default=True, url_param=True)
+    ])
 
 todos = [
     {

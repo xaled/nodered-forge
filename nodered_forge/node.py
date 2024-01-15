@@ -43,6 +43,11 @@ class CustomAPINode:
                 self.parameters[param.name] = param
                 self.parameter_list.append(param.name)
 
+        for param in self.parent.global_parameters:
+            if param.name not in self.parameters:
+                self.parameters[param.name] = param
+                self.parameter_list.append(param.name)
+
     def to_dict(self):
         return {
             'name': self.name,
