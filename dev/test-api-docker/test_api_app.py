@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from nodered_forge import NodeForgeApp
 
 flask_app = Flask(__name__)
-nodered_api = NodeForgeApp("TestTodoApi", "http://test_api:5000")
+nodered_api = NodeForgeApp("TestTodoApi", "http://test_api:5000", default_icon="fa-check-square-o")
 
 todos = [
     {

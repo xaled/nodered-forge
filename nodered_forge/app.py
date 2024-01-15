@@ -5,17 +5,22 @@ from os import makedirs
 import json
 
 from .node import CustomAPINode
-from .utils import to_js_package_name
+from .utils import to_js_package_name, generate_bright_color
+
+DEFAULT_ICON = "font-awesome/fa-globe"
 
 
 class NodeForgeApp:
-    def __init__(self, name, base_url, ignore_ssl_errors=False, auth_type=None, default_category=None,
-                 package_name=None):
+    def __init__(self, name, base_url, ignore_ssl_errors=False, auth_type=None,
+                 package_name=None,
+                 default_icon=None, default_color=None, default_category=None):
         self.name = name
         self.base_url = base_url
         self.ignore_ssl_errors = ignore_ssl_errors
         self.auth_type = auth_type
-        self.default_category = default_category
+        self.default_category = default_category or name
+        self.default_icon = default_icon or DEFAULT_ICON
+        self.default_color = default_color or generate_bright_color(self.name)
         self.api_nodes: List[CustomAPINode] = list()
         self.package_name = package_name or f"node-red-contrib-nodered-forge-{to_js_package_name(name)}"
         self.node_name_prefix = f"{to_js_package_name(name)}-"
@@ -24,9 +29,10 @@ class NodeForgeApp:
         self.api_nodes.append(
             CustomAPINode(self, name, route, method=method, parameters_config=parameters_config, **kwargs))
 
-    def api_node(self, route, name=None, method='GET', parameters_config=None,  **kwargs):
+    def api_node(self, route, name=None, method='GET', parameters_config=None, **kwargs):
         def decorator(func):
-            self.register_api_node(name or func.__name__, route, method=method, parameters_config=parameters_config, **kwargs)
+            self.register_api_node(name or func.__name__, route, method=method, parameters_config=parameters_config,
+                                   **kwargs)
             return func
 
         return decorator
