@@ -1,11 +1,11 @@
 import shutil
 from typing import List
-
-from .node import CustomAPINode
-from .utils import to_js_package_name
 from os.path import join, abspath, exists
 from os import makedirs
 import json
+
+from .node import CustomAPINode
+from .utils import to_js_package_name
 
 
 class NodeForgeApp:
@@ -18,6 +18,7 @@ class NodeForgeApp:
         self.default_category = default_category
         self.api_nodes: List[CustomAPINode] = list()
         self.package_name = package_name or f"node-red-contrib-nodered-forge-{to_js_package_name(name)}"
+        self.node_name_prefix = f"{to_js_package_name(name)}-"
 
     def register_api_node(self, name, route, method='GET', parameters_config=None, **kwargs):
         self.api_nodes.append(

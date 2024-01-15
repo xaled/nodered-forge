@@ -13,8 +13,9 @@
         outputLabels: ["parsed JSON object"],
         icon: '{{ node.icon }}',
         label: function () {
-            return this.name || "{{ node.name }}";
-        }
+            return this.name || "{{ node.label }}";
+        },
+        paletteLabel: "{{ node.label }}"
     });
 </script>
 

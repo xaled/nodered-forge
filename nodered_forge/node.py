@@ -1,11 +1,10 @@
-import re
 import random
 from typing import List, Tuple
+from os.path import join
 
 from .input import NodeParameter
 from .utils import to_js_package_name
-from .templating import render_template
-from os.path import join
+from .templating import render_template, to_title
 
 DEFAULT_COLOR = '#a6bbcf'
 DEFAULT_CATEGORY = 'NodeRedForgePy'
@@ -17,7 +16,8 @@ class CustomAPINode:
                  parameters_config=None, description='No description'):
         from .app import NodeForgeApp
         self.parent: NodeForgeApp = parent
-        self.name = to_js_package_name(name)
+        self.name = self.parent.node_name_prefix + to_js_package_name(name)
+        self.label = to_title(name)
         self.route = route
         self.method = method
         self.color = color or DEFAULT_COLOR

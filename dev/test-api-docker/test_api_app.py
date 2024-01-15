@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+
 from nodered_forge import NodeForgeApp
 
 flask_app = Flask(__name__)
@@ -24,7 +25,7 @@ def get_todos():
     return jsonify({'todos': todos})
 
 
-@nodered_api.api_node('/todos/<str:prefix:2>', method='GET')
+@nodered_api.api_node('/todos/<str:todo-id>', method='GET')
 @flask_app.route('/todos/<int:todo_id>', methods=['GET'])
 def get_todo(todo_id):
     todo = next((item for item in todos if item['id'] == todo_id), None)
