@@ -20,12 +20,7 @@
 </script>
 
 <script type="text/html" data-template-name="{{ node.name }}">
-    <h3>Node Name:</h3>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-    <hr>
+
     <h3>Authentication:</h3>
     {#    <div class="form-row">#}
     {#        <label for="node-input-username"><i class="fa fa-tag"></i> Username</label>#}
@@ -36,13 +31,24 @@
     {#        <input type="password" id="node-input-password">#}
     {#    </div>#}
     <hr>
-    <h3>Parameters:</h3>
-    {% for param_name in node.parameter_list %}
-        <div class="form-row">
-            <label for="node-input-{{ param_name }}"><i class="fa fa-tag"></i> {{ param_name | title }}</label>
-            <input type="text" id="node-input-{{ param_name }}">
-        </div>
-    {% endfor %}
+
+    {% if node.parameter_list %}
+        <h3>Request Params:</h3>
+        {% for param_name in node.parameter_list %}
+            <div class="form-row">
+                <label for="node-input-{{ param_name }}"><i class="fa fa-tag"></i> {{ param_name | title }}</label>
+                <input type="text" id="node-input-{{ param_name }}">
+            </div>
+        {% endfor %}
+        <hr>
+    {% endif %}
+
+    <h3>Node Params:</h3>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
 
 </script>
 
