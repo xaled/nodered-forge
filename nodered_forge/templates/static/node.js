@@ -62,8 +62,14 @@ module.exports = function (RED) {
                 }
             };
 
-            // body
+            {% if node.parent.ignore_ssl_errors %}
+            // ignore SSL errors
+            fetchOptions.agent = new (require('https').Agent)({rejectUnauthorized: false});
+            {% endif %}
+
+
             {% if node.has_body_params() %}
+            // body
             var jsonBody = node.nodeConfig.json_body ? RED.util.evaluateNodeProperty(node.nodeConfig.json_body, node.nodeConfig['json_body{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg) : null;
             if (jsonBody) {
                 fetchOptions.body = JSON.stringify(jsonBody);
