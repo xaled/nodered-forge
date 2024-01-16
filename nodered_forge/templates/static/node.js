@@ -12,8 +12,7 @@ module.exports = function (RED) {
         // });
 
         node.on('input', function (msg) {
-            console.log(node);
-            console.log(node.nodeConfig['authentication{{ TYPED_INPUT_TYPE_SUFFIX }}']);
+            // console.log(node.nodeConfig);
             // parse params
             var urlParams = {};
             var routeParams = {};
@@ -64,14 +63,14 @@ module.exports = function (RED) {
             };
 
             // body
-            if (Object.keys(bodyParams).length !== 0) {
-                var jsonBody = RED.util.evaluateNodeProperty(node.nodeConfig.json_body, node.nodeConfig['json_body{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg);
-                if (jsonBody) {
-                    fetchOptions.body = JSON.stringify(jsonBody);
-                } else {
-                    fetchOptions.body = JSON.stringify(bodyParams);
-                }
+            {% if node.has_body_params() %}
+            var jsonBody = node.nodeConfig.json_body ? RED.util.evaluateNodeProperty(node.nodeConfig.json_body, node.nodeConfig['json_body{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg) : null;
+            if (jsonBody) {
+                fetchOptions.body = JSON.stringify(jsonBody);
+            } else {
+                fetchOptions.body = JSON.stringify(bodyParams);
             }
+            {% endif %}
 
             {% if node.parent.authentication %}
             // authentification

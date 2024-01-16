@@ -50,6 +50,7 @@ class NodeParameter:
     options: List = None
     multiple_select: bool = False
     typed_input: bool = True
+    param_group: str = None
 
     def __post_init__(self):
         self.name = validate_parameter_name(self.name)
@@ -59,6 +60,12 @@ class NodeParameter:
             raise ValueError(f"Unsupported plain input type: {self.plain_type}")
 
         self.options = [_process_option(option) for option in self.options] if self.options else None
+        if self.url_param:
+            self.param_group = 'URL Parameters'
+        elif self.route_param:
+            self.param_group = 'Route Parameters'
+        else:
+            self.param_group = 'Body Parameters'
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -71,7 +78,8 @@ class NodeParameter:
             'url_param': self.url_param,
             'options': self.options,
             'multiple_select': self.multiple_select,
-            'typed_input': self.typed_input
+            'typed_input': self.typed_input,
+            'param_group': self.param_group
         }
 
     def update_route_params(self, other_param: 'NodeParameter'):
@@ -95,7 +103,7 @@ class NodeParameter:
         )
 
     @classmethod
-    def from_str(cls, param_str: str) -> 'NodeParameter':
+    def from_str(cls, param_str: str, **kwargs) -> 'NodeParameter':
         parts = param_str.split(':')
         param_type = InputType.STR
 
@@ -115,7 +123,7 @@ class NodeParameter:
             # elif param_type == InputType.DATE: TODO
             #     default_value = int(default_value)
 
-        return NodeParameter(name=name, type=param_type, default=default_value)
+        return NodeParameter(name=name, type=param_type, default=default_value, **kwargs)
 
     @classmethod
     def from_parm_init(cls, param_init: "PARAM_INIT") -> 'NodeParameter':

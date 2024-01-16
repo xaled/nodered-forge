@@ -82,6 +82,20 @@ class CustomAPINode:
             params['authentication' + TYPED_INPUT_TYPE_SUFFIX] = dict(value='str')
         return params
 
+    def get_param_groups(self):
+        ret = [(param_group, [param_name for param_name in self.parameter_list if
+                              self.parameters[param_name].param_group == param_group])
+               for param_group in ['Route Parameters', 'Body Parameters', 'URL Parameters']
+               ]
+
+        # filter empty groups
+        ret = [(param_group, params) for param_group, params in ret if params]
+        return ret
+
+    def has_body_params(self):
+        return not not [param_name for param_name in self.parameter_list if
+                        self.parameters[param_name].param_group == 'Body Parameters']
+
     def output_node_files(self, pacakge_dir):
         # js
         js_file_path = join(pacakge_dir, f"{self.name}.js")
@@ -102,9 +116,7 @@ def parse_route(route_str: str) -> Tuple[str, List[NodeParameter]]:
     for route_part in route_parts:
         if route_part.startswith('<') and route_part.endswith('>'):
             route_part = route_part[1:-1]
-            parameter = NodeParameter.from_str(route_part)
-            parameter.required = True
-            parameter.route_param = True
+            parameter = NodeParameter.from_str(route_part, required=True, route_param=True)
             params.append(parameter)
             parts.append(f"%%{parameter.name}%%")
         else:
