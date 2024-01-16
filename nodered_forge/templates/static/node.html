@@ -3,11 +3,11 @@
         category: '{{ node.category }}',
         color: '{{ node.color }}',
         defaults: {{ node.get_defaults() | json | safe}},
-
-        //credentials: {
-        //    username: {type: "text"},
-        //    password: {type: "password"}
-        //},
+        {% if node.parent.authentication %}
+            credentials: {
+                authentication: {type: "text"},
+            },
+        {% endif %}
         inputs: 1,
         outputs: 1,
         outputLabels: ["parsed JSON object"],
@@ -42,17 +42,15 @@
 </script>
 
 <script type="text/html" data-template-name="{{ node.name }}">
-
-    <h3>Authentication:</h3>
-    {#    <div class="form-row">#}
-    {#        <label for="node-input-username"><i class="fa fa-tag"></i> Username</label>#}
-    {#        <input type="text" id="node-input-username">#}
-    {#    </div>#}
-    {#    <div class="form-row">#}
-    {#        <label for="node-input-password"><i class="fa fa-tag"></i> Password</label>#}
-    {#        <input type="password" id="node-input-password">#}
-    {#    </div>#}
-    <hr>
+    {% if node.parent.authentication %}
+        <h3>Authentication:</h3>
+        <div class="form-row">
+            <label for="node-input-authentication"><i class="fa fa-user"></i> '{{ node.parent.authentication_header }}'
+                Header</label>
+            <input type="text" id="node-input-authentication">
+        </div>
+        <hr>
+    {% endif %}
 
     {% if node.parameter_list %}
         <h3>Request Params:</h3>

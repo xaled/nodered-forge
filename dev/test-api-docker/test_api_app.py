@@ -1,10 +1,12 @@
+from functools import wraps
+
 from flask import Flask, jsonify, request
 
 from nodered_forge import NodeForgeApp, NodeParameter, InputType
 
 flask_app = Flask(__name__)
 nodered_api = NodeForgeApp(
-    "TestTodoApi", "http://test_api:5000", default_icon="fa-check-square-o",
+    "TestTodoApi", "http://test_api:5000", default_icon="fa-check-square-o", authentication=True,
     global_parameters_config=[
         NodeParameter(name="pretty", type=InputType.BOOL, default=True, url_param=True),
         # NodeParameter(name="nothing", type=InputType.STR, default="walop", url_param=True)
@@ -25,6 +27,16 @@ todos = [
 
 tags_input = NodeParameter('tags', options=['work', 'personal', 'chore', 'family'], multiple_select=True)
 assigned_to_input = NodeParameter('assigned-to', options=['me', 'you', 'him', 'her'])
+
+
+def require_authentication(f):
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        if request.headers.get('Authorization', '') == 'uk6pEDvxSyUZ6bagcZGC4kMLcw8qwf2N':
+            return f(*args, **kwargs)
+        return {'error': 'unauthorized'}, 401
+
+    return wrapped
 
 
 @nodered_api.api_node('/todos', method='GET')
@@ -52,6 +64,7 @@ def get_todo(todo_id):
     assigned_to_input,
 ])
 @flask_app.route('/todos', methods=['POST'])
+@require_authentication
 def create_todo():
     data = request.get_json()
     flask_app.logger.info(data)
@@ -81,6 +94,7 @@ def create_todo():
     assigned_to_input,
 ])
 @flask_app.route('/todos/<int:todo_id>', methods=['PUT'])
+@require_authentication
 def update_todo(todo_id):
     todo = next((item for item in todos if item['id'] == todo_id), None)
     if todo:
@@ -103,6 +117,7 @@ def update_todo(todo_id):
 
 @nodered_api.api_node('/todos/<int:todo_id>', method='DELETE')
 @flask_app.route('/todos/<int:todo_id>', methods=['DELETE'])
+@require_authentication
 def delete_todo(todo_id):
     global todos
     todos = [item for item in todos if item['id'] != todo_id]

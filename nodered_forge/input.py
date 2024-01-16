@@ -5,7 +5,7 @@ from enum import Enum
 from .conf import TYPED_INPUT_TYPE_SUFFIX
 from .type_hints import Optional, Any, Dict, List
 
-FORBIDDEN_NAMES = ("name", "auth", 'id', 'type', 'wires', 'inputs', 'outputs')
+FORBIDDEN_NAMES = ("name", "authentication", 'id', 'type', 'wires', 'inputs', 'outputs')
 ALLOWED_PLAIN_INPUT_TYPES = ("text", "password", "checkbox", "radio", "color", "date", "datetime-local", "email",
                              "month", "number", "tel", "time", "url", "week", "textarea")
 

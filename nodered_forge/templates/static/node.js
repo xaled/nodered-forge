@@ -72,7 +72,11 @@ module.exports = function (RED) {
                 fetchOptions.body = JSON.stringify(bodyParams);
             }
 
-            // TODO: authentification
+            {% if node.parent.authentication %}
+            // authentification
+            fetchOptions.headers['{{ node.parent.authentication_header }}'] = this.credentials.authentication;
+
+            {% endif %}
 
 
             // Perform the API call using the Fetch API
@@ -96,5 +100,9 @@ module.exports = function (RED) {
 
     }
 
-    RED.nodes.registerType('{{ node.name }}', CustomNode);
+    var registerTypeOptions = {};
+    {% if node.parent.authentication %}
+    registerTypeOptions.credentials = {authentication: {type: "text"}};
+    {% endif %}
+    RED.nodes.registerType('{{ node.name }}', CustomNode, registerTypeOptions);
 }

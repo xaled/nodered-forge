@@ -12,13 +12,14 @@ DEFAULT_ICON = "font-awesome/fa-globe"
 
 
 class NodeForgeApp:
-    def __init__(self, name, base_url, ignore_ssl_errors=False, auth_type=None,
-                 package_name=None,
+    def __init__(self, name, base_url, ignore_ssl_errors=False, authentication=False,
+                 package_name=None, authentication_header='Authorization',
                  default_icon=None, default_color=None, default_category=None, global_parameters_config=None):
         self.name = name
         self.base_url = base_url
         self.ignore_ssl_errors = ignore_ssl_errors
-        self.auth_type = auth_type
+        self.authentication = authentication
+        self.authentication_header = authentication_header
         self.default_category = default_category or name
         self.default_icon = default_icon or DEFAULT_ICON
         self.default_color = default_color or generate_bright_color(self.name)
