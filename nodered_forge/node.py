@@ -73,6 +73,8 @@ class CustomAPINode:
             for param_name in self.parameter_list
         }
         params['name'] = {"value": ""}
+        params['json_body'] = {"value": ""}
+        params['json_body' + TYPED_INPUT_TYPE_SUFFIX] = {"value": "json"}
         params.update(
             {param.name + TYPED_INPUT_TYPE_SUFFIX: dict(value=param.type.value) for param in self.parameters.values() if
              param.typed_input})

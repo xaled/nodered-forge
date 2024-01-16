@@ -65,7 +65,12 @@ module.exports = function (RED) {
 
             // body
             if (Object.keys(bodyParams).length !== 0) {
-                fetchOptions.body = JSON.stringify(bodyParams);
+                var jsonBody = RED.util.evaluateNodeProperty(node.nodeConfig.json_body, node.nodeConfig['json_body{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg);
+                if (jsonBody) {
+                    fetchOptions.body = JSON.stringify(jsonBody);
+                } else {
+                    fetchOptions.body = JSON.stringify(bodyParams);
+                }
             }
 
             {% if node.parent.authentication %}
@@ -82,12 +87,26 @@ module.exports = function (RED) {
                         status: response.status,
                         headers: response.headers
                     };
-                    return response.json();
+
+                    // Check if the response is JSON
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        return response.json();
+                    } else {
+                        // If not JSON, return the response text directly
+                        return response.text();
+
+                    }
                 })
                 .then(data => {
-                    // Save the JSON response in the msg object
-                    msg.payload = data;
-                    node.send(msg);
+                    if (typeof data === 'string') {
+                        node.error('Response is not in JSON format: ' + data);
+                    } else {
+                        msg.payload = data;
+                        node.send(msg);
+                    }
+
+
                 })
                 .catch(error => {
                     node.error('Error making API call: ' + error.message);

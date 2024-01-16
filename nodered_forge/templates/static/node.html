@@ -44,6 +44,11 @@
                     typeField: "#node-input-authentication{{ TYPED_INPUT_TYPE_SUFFIX }}"
                 });
             {% endif %}
+            $("#node-input-json_body").typedInput({
+                type: "json",
+                types: ["json", "msg",],
+                typeField: "#node-input-json_body{{ TYPED_INPUT_TYPE_SUFFIX }}"
+            });
         }
     });
 </script>
@@ -81,12 +86,22 @@
         {% endfor %}
         <hr>
     {% endif %}
+    <h3>Json Body:</h3>
+    <div class="form-row">
+        <label for="node-input-json_body"><i class="fa fa-code"></i> Json Body</label>
+        <input type="text" id="node-input-json_body">
+        <input type="hidden" id="node-input-json_body{{ TYPED_INPUT_TYPE_SUFFIX }}">
+    </div>
+    <p>If this field is filled, body parameters will be ignored.</p>
 
     <h3>Node Params:</h3>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
+    <hr>
+    <h3>API Description: </h3>
+    <p>{{ node.description }}</p>
 
 
 </script>
