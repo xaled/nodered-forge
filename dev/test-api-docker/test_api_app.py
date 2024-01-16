@@ -32,7 +32,9 @@ assigned_to_input = NodeParameter('assigned-to', options=['me', 'you', 'him', 'h
 def require_authentication(f):
     @wraps(f)
     def wrapped(*args, **kwargs):
-        if request.headers.get('Authorization', '') == 'uk6pEDvxSyUZ6bagcZGC4kMLcw8qwf2N':
+        auth_header = request.headers.get('Authorization', '')
+        flask_app.logger.info(f"{auth_header=}")
+        if auth_header == 'uk6pEDvxSyUZ6bagcZGC4kMLcw8qwf2N':
             return f(*args, **kwargs)
         return {'error': 'unauthorized'}, 401
 

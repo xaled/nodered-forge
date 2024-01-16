@@ -3,13 +3,8 @@ const fetch = require("node-fetch");
 module.exports = function (RED) {
     function CustomNode(config) {
         RED.nodes.createNode(this, config);
-        {% for param_name, param in node.parameters.items() %}
-        this['{{ param_name }}'] = config['{{ param_name }}'];
-        {% if param.typed_input %}
-        this['{{ param_name + TYPED_INPUT_TYPE_SUFFIX}}'] = config['{{ param_name + TYPED_INPUT_TYPE_SUFFIX}}'];
-        {% endif %}
-        {% endfor %}
         var node = this;
+        node.nodeConfig = config;
         node.paramConfig = {{ node.to_dict() | json | safe}};
         // node.on('input', function (msg) {
         //     msg.payload = msg.payload.toLowerCase();
@@ -17,17 +12,18 @@ module.exports = function (RED) {
         // });
 
         node.on('input', function (msg) {
-            // console.log(node.paramConfig);
+            console.log(node);
+            console.log(node.nodeConfig['authentication{{ TYPED_INPUT_TYPE_SUFFIX }}']);
             // parse params
             var urlParams = {};
             var routeParams = {};
             var bodyParams = {};
             node.paramConfig.parameter_list.forEach((paramName) => {
                 const paramConfig = node.paramConfig.parameters_config[paramName];
-                var value = node[paramName];
+                var value = node.nodeConfig[paramName];
                 if (value !== '' || paramConfig.required) {
                     if (paramConfig.typed_input && !paramConfig.options) {
-                        value = RED.util.evaluateNodeProperty(value, node[paramName + '{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg);
+                        value = RED.util.evaluateNodeProperty(value, node.nodeConfig[paramName + '{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg);
                     } else if (paramConfig.typed_input && paramConfig.options && paramConfig.multiple_select) {
                         value = value.split(',').map(part => part.trim());
                     }
@@ -74,7 +70,7 @@ module.exports = function (RED) {
 
             {% if node.parent.authentication %}
             // authentification
-            fetchOptions.headers['{{ node.parent.authentication_header }}'] = this.credentials.authentication;
+            fetchOptions.headers['{{ node.parent.authentication_header }}'] = RED.util.evaluateNodeProperty(node.credentials.authentication, node.nodeConfig['authentication{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg);
 
             {% endif %}
 

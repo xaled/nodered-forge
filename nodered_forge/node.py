@@ -76,6 +76,8 @@ class CustomAPINode:
         params.update(
             {param.name + TYPED_INPUT_TYPE_SUFFIX: dict(value=param.type.value) for param in self.parameters.values() if
              param.typed_input})
+        if self.parent.authentication:
+            params['authentication' + TYPED_INPUT_TYPE_SUFFIX] = dict(value='str')
         return params
 
     def output_node_files(self, pacakge_dir):

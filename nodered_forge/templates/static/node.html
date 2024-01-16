@@ -32,11 +32,18 @@
                 {% elif param.typed_input  %}
                     $("#node-input-{{ param_name }}").typedInput({
                         type: "{{ param.type.value}}",
-                        types: ["{{ param.type.value}}", "msg",],
+                        types: ["{{ param.type.value}}", "msg", "jsonata"],
                         typeField: "#node-input-{{ param_name + TYPED_INPUT_TYPE_SUFFIX }}"
                     });
                 {% endif %}
             {% endfor %}
+            {% if node.parent.authentication %}
+                $("#node-input-authentication").typedInput({
+                    type: "str",
+                    types: ["str", "msg",],
+                    typeField: "#node-input-authentication{{ TYPED_INPUT_TYPE_SUFFIX }}"
+                });
+            {% endif %}
         }
     });
 </script>
@@ -48,6 +55,7 @@
             <label for="node-input-authentication"><i class="fa fa-user"></i> '{{ node.parent.authentication_header }}'
                 Header</label>
             <input type="text" id="node-input-authentication">
+            <input type="hidden" id="node-input-authentication{{ TYPED_INPUT_TYPE_SUFFIX }}">
         </div>
         <hr>
     {% endif %}
