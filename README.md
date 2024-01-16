@@ -2,7 +2,7 @@
 NodeRedForgePy is a Python-based tool designed to facilitate the generation of custom JSON API nodes for Node-RED.
 
 ![NodeRedForgePy Screenshot](/doc/images/example.png)
-![NodeRedForgePy Screenshot 2](/doc/images/example2.png)
+<!-- ![NodeRedForgePy Screenshot 2](/doc/images/example2.png) -->
 
 ## Installation
 To install NodeRedForgePy, use the following pip command:
@@ -84,9 +84,9 @@ Parameter strings accept the following formats:
 ### NodeParameter
 
 There are three types of API parameters:
-- route parameters (constructing the URI stem),
+- Route parameters (constructing the URI stem),
 - URL parameters (sent as URL-encoded key-values),
-- and body parameters (sent as JSON).
+- Body parameters (sent as JSON).
 
 Initialization options for `NodeParameter`:
 ```python
