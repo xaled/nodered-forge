@@ -15,7 +15,19 @@
         label: function () {
             return this.name || "{{ node.label }}";
         },
-        paletteLabel: "{{ node.label }}"
+        paletteLabel: "{{ node.label }}",
+        oneditprepare: function () {
+            {% for param_name in node.parameter_list %}
+                {% set param = node.parameters[param_name] %}
+                {% if param.typed_input %}
+                    $("#node-input-{{ param_name }}").typedInput({
+                        type: "{{ param.type.value}}",
+                        types: ["{{ param.type.value}}", "msg",],
+                        typeField: "#node-input-{{ param_name }}-type"
+                    });
+                {% endif %}
+            {% endfor %}
+        }
     });
 </script>
 
@@ -35,9 +47,18 @@
     {% if node.parameter_list %}
         <h3>Request Params:</h3>
         {% for param_name in node.parameter_list %}
+            {% set param = node.parameters[param_name] %}
             <div class="form-row">
                 <label for="node-input-{{ param_name }}"><i class="fa fa-tag"></i> {{ param_name | title }}</label>
-                <input type="text" id="node-input-{{ param_name }}">
+                {% if param.type.value == 'plain' %}
+                    <input type="text" id="node-input-{{ param_name }}">
+                {% elif param.type.value == 'text_editor' %}
+                    <input type="text" id="node-input-{{ param_name }}">
+                {% else %}
+                    <input type="text" id="node-input-{{ param_name }}">
+                    <input type="hidden" id="node-input-{{ param_name }}-type">
+
+                {% endif %}
             </div>
         {% endfor %}
         <hr>
@@ -56,3 +77,4 @@
 <script type="text/html" data-help-name="{{ node.name }}">
     <p>{{ node.description }}</p>
 </script>
+

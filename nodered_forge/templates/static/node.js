@@ -3,8 +3,11 @@ const fetch = require("node-fetch");
 module.exports = function (RED) {
     function CustomNode(config) {
         RED.nodes.createNode(this, config);
-        {% for k,v in node.parameters.items() %}
-        this['{{ k }}'] = config['{{ k }}'];
+        {% for param_name, param in node.parameters.items() %}
+        this['{{ param_name }}'] = config['{{ param_name }}'];
+        {% if param.typed_input %}
+        this['{{ param_name }}-type'] = config['{{ param_name }}-type'];
+        {% endif %}
         {% endfor %}
         var node = this;
         node.paramConfig = {{ node.to_dict() | json | safe}};
@@ -14,15 +17,18 @@ module.exports = function (RED) {
         // });
 
         node.on('input', function (msg) {
-
+            // console.log(node);
             // parse params
             var urlParams = {};
             var routeParams = {};
             var bodyParams = {};
             node.paramConfig.parameter_list.forEach((paramName) => {
                 const paramConfig = node.paramConfig.parameters_config[paramName];
-                const value = node[paramName];
+                var value = node[paramName];
                 if (value !== '' || paramConfig[paramName].required) {
+                    if (paramConfig.typed_input) {
+                        value = RED.util.evaluateNodeProperty(value, node[paramName + '-type'], node, msg);
+                    }
                     if (paramConfig.url_param) {
                         urlParams[paramName] = value;
                     } else if (paramConfig.route_param) {

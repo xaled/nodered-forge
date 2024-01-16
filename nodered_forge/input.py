@@ -1,8 +1,8 @@
 import re
-
-from .type_hints import Optional, Any, Dict, List
 from dataclasses import dataclass
 from enum import Enum
+
+from .type_hints import Optional, Any, Dict, List
 
 FORBIDDEN_NAMES = ("name", "auth")
 
@@ -17,7 +17,8 @@ class InputType(Enum):
     JSON = "json"
     DATE = "date"  # TODO timedate??
     SELECT = "select"
-    TEXT_EDITOR = "text_editor"
+
+    # TEXT_EDITOR = "text_editor"
 
     @classmethod
     def get_input_type(cls, type_id: str) -> 'InputType':
@@ -43,9 +44,11 @@ class NodeParameter:
     url_param: bool = False
     options: List = None
     multiple_select: bool = False
+    typed_input: bool = True
 
     def __post_init__(self):
         self.name = validate_parameter_name(self.name)
+        self.typed_input = self.type.value not in ('plain', 'text_editor')
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -57,7 +60,8 @@ class NodeParameter:
             'route_param': self.route_param,
             'url_param': self.url_param,
             'options': self.options,
-            'multiple_select': self.multiple_select
+            'multiple_select': self.multiple_select,
+            'typed_input': self.typed_input
         }
 
     def update_route_params(self, other_param: 'NodeParameter'):

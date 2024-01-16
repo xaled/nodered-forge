@@ -6,7 +6,8 @@ flask_app = Flask(__name__)
 nodered_api = NodeForgeApp(
     "TestTodoApi", "http://test_api:5000", default_icon="fa-check-square-o",
     global_parameters_config=[
-        NodeParameter(name="pretty", type=InputType.BOOL, default=True, url_param=True)
+        NodeParameter(name="pretty", type=InputType.BOOL, default=True, url_param=True),
+        # NodeParameter(name="nothing", type=InputType.STR, default="walop", url_param=True)
     ])
 
 todos = [
@@ -42,7 +43,7 @@ def get_todo(todo_id):
 @nodered_api.api_node('/todos', method='POST', parameters_config=[
     'str:text',
     'date:due_date',
-    'text_editor:notes',
+    'str:notes',
     'int:level',
     # TODO
     # ':tags',
@@ -70,7 +71,7 @@ def create_todo():
 @nodered_api.api_node('/todos/<int:todo_id>', method='PUT', parameters_config=[
     'str:text',
     'date:due_date',
-    'text_editor:notes',
+    'str:notes',
     'int:level',
     # TODO
     # ':tags',

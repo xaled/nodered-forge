@@ -72,6 +72,8 @@ class CustomAPINode:
             for param_name in self.parameter_list
         }
         params['name'] = {"value": ""}
+        params.update({param.name + '-type': dict(value=param.type.value) for param in self.parameters.values() if
+                       param.typed_input})
         return params
 
     def output_node_files(self, pacakge_dir):
