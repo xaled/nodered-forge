@@ -12,7 +12,7 @@ from .templating import render_template, to_title
 
 class CustomAPINode:
     def __init__(self, parent, name, route, method='GET', color=None, category=None, icon=None,
-                 parameters_config=None, description='No description'):
+                 parameters_config=None, description='No API description is provided'):
         from .app import NodeForgeApp
         self.parent: NodeForgeApp = parent
         self.name = self.parent.node_name_prefix + to_js_package_name(name)
