@@ -32,6 +32,8 @@ class InputType(Enum):
             type_id = 'NUM'
         elif type_id == 'BOOLEAN':
             type_id = 'BOOL'
+        elif type_id in ('TIMESTAMP', 'TIME', 'DATETIME'):
+            type_id = 'DATE'
 
         return InputType[type_id]
 
@@ -55,6 +57,8 @@ class NodeParameter:
         self.plain_type = self.plain_type.strip().lower()
         if self.plain_type not in ALLOWED_PLAIN_INPUT_TYPES:
             raise ValueError(f"Unsupported plain input type: {self.plain_type}")
+
+        self.options = [_process_option(option) for option in self.options] if self.options else None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -131,15 +135,36 @@ PARAM_INIT = str | NodeParameter | Dict[str, Any]
 
 
 def validate_parameter_name(name):
-    name = name.strip().lower().replace('_', '-').replace(' ', '_')
+    name = name.strip().lower().replace(' ', '_')
 
     if len(name) == 1 or name in FORBIDDEN_NAMES:
-        raise ValueError("Bad parameter name value: "
+        raise ValueError(f"Bad parameter name {name=}: "
                          "reserved names (https://nodered.org/docs/creating-nodes/properties#reserved-property-names).")
 
     if name.endswith(TYPED_INPUT_TYPE_SUFFIX):
-        raise ValueError("Bad parameter name value: reserved for typedinput.")
+        raise ValueError(f"Bad parameter name {name=}: reserved for typedinput.")
 
-    if not name[0].isalpha() or not re.match("^[a-zA-Z0-9-]+$", name):
-        raise ValueError("Bad parameter name value: only letters, numbers, and hyphens in a string are allowed.")
+    if not name[0].isalpha() or not re.match("^[a-zA-Z0-9-_]+$", name):
+        raise ValueError(f"Bad parameter name {name=}:"
+                         f" only letters, numbers, hyphens and underscores in a string are allowed.")
     return name
+
+
+def _process_option(option):
+    if isinstance(option, str):
+        value, label = option, option
+    elif isinstance(option, (tuple, list)) and len(option) == 2:
+        value, label = option[0], option[1]
+    elif isinstance(option, dict):
+        value, label = option['value'], option['label']
+    else:
+        raise ValueError(f"Bad Option {option=}: options should be an iterator either strings, value & label tuples,"
+                         " or dictionaries with value and label keys!")
+
+    value = value.strip().lower().replace(' ', '_')
+
+    if not value[0].isalpha() or not re.match("^[a-zA-Z0-9-]+$", value):
+        raise ValueError(f"Bad Option value {value=}: "
+                         f"only letters, numbers, hyphens and underscores in a string are allowed.")
+
+    return dict(value=value, label=label)

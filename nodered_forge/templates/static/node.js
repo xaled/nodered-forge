@@ -17,7 +17,7 @@ module.exports = function (RED) {
         // });
 
         node.on('input', function (msg) {
-            console.log(node.paramConfig);
+            // console.log(node.paramConfig);
             // parse params
             var urlParams = {};
             var routeParams = {};
@@ -26,8 +26,10 @@ module.exports = function (RED) {
                 const paramConfig = node.paramConfig.parameters_config[paramName];
                 var value = node[paramName];
                 if (value !== '' || paramConfig.required) {
-                    if (paramConfig.typed_input) {
+                    if (paramConfig.typed_input && !paramConfig.options) {
                         value = RED.util.evaluateNodeProperty(value, node[paramName + '{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg);
+                    } else if (paramConfig.typed_input && paramConfig.options && paramConfig.multiple_select) {
+                        value = value.split(',').map(part => part.trim());
                     }
                     if (paramConfig.url_param) {
                         urlParams[paramName] = value;

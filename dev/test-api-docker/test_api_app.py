@@ -15,13 +15,16 @@ todos = [
         'id': 1,
         'text': 'Example Todo',
         'done': False,
-        'due_date': '2024-01-15',
+        'due-date': '2024-01-15',
         'tags': ['work', 'urgent'],
         'notes': 'Finish the task',
         'level': 2,
-        'assigned_to': 'me'
+        'assigned-to': 'me'
     }
 ]
+
+tags_input = NodeParameter('tags', options=['work', 'personal', 'chore', 'family'], multiple_select=True)
+assigned_to_input = NodeParameter('assigned-to', options=['me', 'you', 'him', 'her'])
 
 
 @nodered_api.api_node('/todos', method='GET')
@@ -42,26 +45,26 @@ def get_todo(todo_id):
 
 @nodered_api.api_node('/todos', method='POST', parameters_config=[
     'str:text',
-    'date:due_date',
+    'date:due-date',
     NodeParameter('notes', type=InputType.PLAIN, plain_type='textarea'),
     'int:level',
-    # TODO
-    # ':tags',
-    # ':assigned_to',
+    tags_input,
+    assigned_to_input,
 ])
 @flask_app.route('/todos', methods=['POST'])
 def create_todo():
     data = request.get_json()
+    flask_app.logger.info(data)
 
     new_todo = {
         'id': len(todos) + 1,
         'text': data['text'],
         'done': data.get('done', False),
-        'due_date': data.get('due_date'),
+        'due-date': data.get('due-date'),
         'tags': data.get('tags', []),
         'notes': data.get('notes'),
         'level': data.get('level'),
-        'assigned_to': data.get('assigned_to', 'me')
+        'assigned-to': data.get('assigned-to', 'me')
     }
 
     todos.append(new_todo)
@@ -70,12 +73,12 @@ def create_todo():
 
 @nodered_api.api_node('/todos/<int:todo_id>', method='PUT', parameters_config=[
     'str:text',
-    'date:due_date',
+    'date:due-date',
+    'bool:done',
     NodeParameter('notes', type=InputType.PLAIN, plain_type='textarea'),
     'int:level',
-    # TODO
-    # ':tags',
-    # ':assigned_to',
+    tags_input,
+    assigned_to_input,
 ])
 @flask_app.route('/todos/<int:todo_id>', methods=['PUT'])
 def update_todo(todo_id):
@@ -86,11 +89,11 @@ def update_todo(todo_id):
         todo.update({
             'text': data.get('text', todo['text']),
             'done': data.get('done', todo['done']),
-            'due_date': data.get('due_date', todo['due_date']),
+            'due-date': data.get('due-date', todo['due-date']),
             'tags': data.get('tags', todo['tags']),
             'notes': data.get('notes', todo['notes']),
             'level': data.get('level', todo['level']),
-            'assigned_to': data.get('assigned_to', todo['assigned_to'])
+            'assigned-to': data.get('assigned-to', todo['assigned-to'])
         })
 
         return jsonify({'todo': todo})

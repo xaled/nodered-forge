@@ -19,7 +19,17 @@
         oneditprepare: function () {
             {% for param_name in node.parameter_list %}
                 {% set param = node.parameters[param_name] %}
-                {% if param.typed_input %}
+                {% if param.typed_input and param.options %}
+                    $("#node-input-{{ param_name }}").typedInput({
+                        types: [
+                            {
+                                value: "{{ param_name }}",
+                                multiple: {{ param.multiple_select | json }},
+                                options: {{ param.options | json | safe }}
+                            }
+                        ]
+                    })
+                {% elif param.typed_input  %}
                     $("#node-input-{{ param_name }}").typedInput({
                         type: "{{ param.type.value}}",
                         types: ["{{ param.type.value}}", "msg",],
