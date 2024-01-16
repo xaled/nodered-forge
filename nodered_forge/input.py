@@ -5,7 +5,7 @@ from enum import Enum
 from .conf import TYPED_INPUT_TYPE_SUFFIX
 from .type_hints import Optional, Any, Dict, List
 
-FORBIDDEN_NAMES = ("name", "auth")
+FORBIDDEN_NAMES = ("name", "auth", 'id', 'type', 'wires', 'inputs', 'outputs')
 
 BASE_PARAM_PATTERN = r'(([a-z]+):([a-zA-Z_]+)'
 
@@ -128,9 +128,13 @@ PARAM_INIT = str | NodeParameter | Dict[str, Any]
 def validate_parameter_name(name):
     name = name.strip().lower().replace('_', '-').replace(' ', '_')
 
+    if len(name) == 1 or name in FORBIDDEN_NAMES:
+        raise ValueError("Bad parameter name value: "
+                         "reserved names (https://nodered.org/docs/creating-nodes/properties#reserved-property-names).")
+
     if name.endswith(TYPED_INPUT_TYPE_SUFFIX):
         raise ValueError("Bad parameter name value: reserved for typedinput.")
 
-    if name in FORBIDDEN_NAMES or not name[0].isalpha() or not re.match("^[a-zA-Z0-9-]+$", name):
-        raise ValueError("Bad parameter name value")
+    if not name[0].isalpha() or not re.match("^[a-zA-Z0-9-]+$", name):
+        raise ValueError("Bad parameter name value: only letters, numbers, and hyphens in a string are allowed.")
     return name
