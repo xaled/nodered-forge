@@ -50,10 +50,12 @@
             {% set param = node.parameters[param_name] %}
             <div class="form-row">
                 <label for="node-input-{{ param_name }}"><i class="fa fa-tag"></i> {{ param_name | title }}</label>
-                {% if param.type.value == 'plain' %}
-                    <input type="text" id="node-input-{{ param_name }}">
-                {% elif param.type.value == 'text_editor' %}
-                    <input type="text" id="node-input-{{ param_name }}">
+                {% if param.type.value == 'plain' and param.plain_type == 'textarea' %}
+                    <textarea id="node-input-{{ param_name }}"></textarea>
+                {% elif param.type.value == 'plain' %}
+                    <input type="{{ param.plain_type }}" id="node-input-{{ param_name }}">
+                    {#                {% elif param.type.value == 'text_editor' %}#}
+                    {#                    <input type="text" id="node-input-{{ param_name }}">#}
                 {% else %}
                     <input type="text" id="node-input-{{ param_name }}">
                     <input type="hidden" id="node-input-{{ param_name + TYPED_INPUT_TYPE_SUFFIX }}">

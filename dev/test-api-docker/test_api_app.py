@@ -43,7 +43,7 @@ def get_todo(todo_id):
 @nodered_api.api_node('/todos', method='POST', parameters_config=[
     'str:text',
     'date:due_date',
-    'str:notes',
+    NodeParameter('notes', type=InputType.PLAIN, plain_type='textarea'),
     'int:level',
     # TODO
     # ':tags',
@@ -71,7 +71,7 @@ def create_todo():
 @nodered_api.api_node('/todos/<int:todo_id>', method='PUT', parameters_config=[
     'str:text',
     'date:due_date',
-    'str:notes',
+    NodeParameter('notes', type=InputType.PLAIN, plain_type='textarea'),
     'int:level',
     # TODO
     # ':tags',

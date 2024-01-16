@@ -17,7 +17,7 @@ module.exports = function (RED) {
         // });
 
         node.on('input', function (msg) {
-            // console.log(node);
+            console.log(node.paramConfig);
             // parse params
             var urlParams = {};
             var routeParams = {};
@@ -25,7 +25,7 @@ module.exports = function (RED) {
             node.paramConfig.parameter_list.forEach((paramName) => {
                 const paramConfig = node.paramConfig.parameters_config[paramName];
                 var value = node[paramName];
-                if (value !== '' || paramConfig[paramName].required) {
+                if (value !== '' || paramConfig.required) {
                     if (paramConfig.typed_input) {
                         value = RED.util.evaluateNodeProperty(value, node[paramName + '{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg);
                     }

@@ -6,6 +6,8 @@ from .conf import TYPED_INPUT_TYPE_SUFFIX
 from .type_hints import Optional, Any, Dict, List
 
 FORBIDDEN_NAMES = ("name", "auth", 'id', 'type', 'wires', 'inputs', 'outputs')
+ALLOWED_PLAIN_INPUT_TYPES = ("text", "password", "checkbox", "radio", "color", "date", "datetime-local", "email",
+                             "month", "number", "tel", "time", "url", "week", "textarea")
 
 BASE_PARAM_PATTERN = r'(([a-z]+):([a-zA-Z_]+)'
 
@@ -50,6 +52,9 @@ class NodeParameter:
     def __post_init__(self):
         self.name = validate_parameter_name(self.name)
         self.typed_input = self.type.value not in ('plain', 'text_editor')
+        self.plain_type = self.plain_type.strip().lower()
+        if self.plain_type not in ALLOWED_PLAIN_INPUT_TYPES:
+            raise ValueError(f"Unsupported plain input type: {self.plain_type}")
 
     def to_dict(self) -> Dict[str, Any]:
         return {
