@@ -1,6 +1,7 @@
 from typing import List, Tuple
 from os.path import join
 
+from .conf import TYPED_INPUT_TYPE_SUFFIX
 from .input import NodeParameter
 from .utils import to_js_package_name, normalize_icon
 from .templating import render_template, to_title
@@ -72,8 +73,9 @@ class CustomAPINode:
             for param_name in self.parameter_list
         }
         params['name'] = {"value": ""}
-        params.update({param.name + '-type': dict(value=param.type.value) for param in self.parameters.values() if
-                       param.typed_input})
+        params.update(
+            {param.name + TYPED_INPUT_TYPE_SUFFIX: dict(value=param.type.value) for param in self.parameters.values() if
+             param.typed_input})
         return params
 
     def output_node_files(self, pacakge_dir):

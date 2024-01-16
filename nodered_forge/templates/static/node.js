@@ -6,7 +6,7 @@ module.exports = function (RED) {
         {% for param_name, param in node.parameters.items() %}
         this['{{ param_name }}'] = config['{{ param_name }}'];
         {% if param.typed_input %}
-        this['{{ param_name }}-type'] = config['{{ param_name }}-type'];
+        this['{{ param_name + TYPED_INPUT_TYPE_SUFFIX}}'] = config['{{ param_name + TYPED_INPUT_TYPE_SUFFIX}}'];
         {% endif %}
         {% endfor %}
         var node = this;
@@ -27,7 +27,7 @@ module.exports = function (RED) {
                 var value = node[paramName];
                 if (value !== '' || paramConfig[paramName].required) {
                     if (paramConfig.typed_input) {
-                        value = RED.util.evaluateNodeProperty(value, node[paramName + '-type'], node, msg);
+                        value = RED.util.evaluateNodeProperty(value, node[paramName + '{{ TYPED_INPUT_TYPE_SUFFIX }}'], node, msg);
                     }
                     if (paramConfig.url_param) {
                         urlParams[paramName] = value;

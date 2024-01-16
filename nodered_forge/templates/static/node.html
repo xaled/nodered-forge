@@ -23,7 +23,7 @@
                     $("#node-input-{{ param_name }}").typedInput({
                         type: "{{ param.type.value}}",
                         types: ["{{ param.type.value}}", "msg",],
-                        typeField: "#node-input-{{ param_name }}-type"
+                        typeField: "#node-input-{{ param_name + TYPED_INPUT_TYPE_SUFFIX }}"
                     });
                 {% endif %}
             {% endfor %}
@@ -56,7 +56,7 @@
                     <input type="text" id="node-input-{{ param_name }}">
                 {% else %}
                     <input type="text" id="node-input-{{ param_name }}">
-                    <input type="hidden" id="node-input-{{ param_name }}-type">
+                    <input type="hidden" id="node-input-{{ param_name + TYPED_INPUT_TYPE_SUFFIX }}">
 
                 {% endif %}
             </div>
