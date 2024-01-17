@@ -152,7 +152,8 @@ def update_todo(todo_id):
     else:
         return jsonify({'message': 'Todo not found'}), 404
 ```
-![NodeRedForgePy Screenshot 2](/doc/images/example2.png)
+This code will generate a custom node with the following edit view:
+![Edit view screenshot for the previous example](/doc/images/example2.png)
 
 ## JSON Body Request
 If a body parameter (neither `route_param` nor `url_param` is set to True) is included in the node config, a JSON body property is added to the custom node.
