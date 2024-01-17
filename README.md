@@ -1,11 +1,11 @@
-# NodeRedForgePy
-NodeRedForgePy is a Python-based tool designed to facilitate the generation of custom JSON API nodes for Node-RED.
+# NodeRedForge
+NodeRedForge is a Python-based tool designed to facilitate the generation of custom JSON API nodes for Node-RED.
 
-![NodeRedForgePy Screenshot](/doc/images/example.png)
-<!-- ![NodeRedForgePy Screenshot 2](/doc/images/example2.png) -->
+![NodeRedForge Screenshot](/doc/images/example.png)
+<!-- ![NodeRedForge Screenshot 2](/doc/images/example2.png) -->
 
 ## Installation
-To install NodeRedForgePy, use the following pip command:
+To install NodeRedForge, use the following pip command:
 
 ```bash
 pip install nodered-forge
