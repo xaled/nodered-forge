@@ -180,4 +180,12 @@ npm install /modules/package-name
 Restart Node-RED if the module is installed or updated.
 
 ## Test App
-An example app can be found under `dev/test-api-docker/test_api_app.py`, which is a dummy todo manager with CRUD operations. There is also a Docker Compose file with both this app and Node-RED to test the app; don't forget to restart upon making changes to the test app.
+An example app can be found under `dev/test-api-docker/test_api_app.py`, which is a dummy todo manager with CRUD operations.
+There is also a Docker Compose file with both this app and Node-RED to test the app.
+
+To use this test app:
+
+- First, create the directories: `data/node-red/` and `data/modules` with ownership IDs 1000:1000 (in most operating systems, it's your user): `mkdir -p data/node-red/node_modules data/modules`.
+- Run `docker-compose up`.
+- If updates are made to the app, don't forget to restart the instances: `docker-compose restart`.
+- If updates are only to the modules directory, restart the Node-RED instance: `docker-compose restart node-red`.

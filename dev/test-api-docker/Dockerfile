@@ -6,9 +6,12 @@ WORKDIR /app
 
 # Copy the current directory contents into the container at /app
 COPY test_api_app.py /app/
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 
 # Install any needed packages specified in requirements.txt
-RUN pip install  Flask
+RUN pip install  Flask nodered-forge
 
 # Create a non-root user with UID 1000
 RUN adduser -D -u 1000 user
@@ -19,4 +22,4 @@ EXPOSE 5000
 
 # Define environment variable
 # Run app.py when the container launches
-CMD ["python", "test_api_app.py"]
+CMD ["/entrypoint.sh"]
