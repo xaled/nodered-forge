@@ -1,5 +1,6 @@
 # NodeRedForge
 NodeRedForge is a Python-based tool designed to facilitate the generation of custom JSON API nodes for Node-RED.
+These generated nodes offer customizable features such as icons, colors, and properties, making them seamlessly integrable and deployable within Node-RED projects for executing JSON API requests.
 
 ![NodeRedForge Screenshot](/doc/images/example.png)
 <!-- ![NodeRedForge Screenshot 2](/doc/images/example2.png) -->
@@ -189,3 +190,6 @@ To use this test app:
 - Run `docker-compose up`.
 - If updates are made to the app, don't forget to restart the instances: `docker-compose restart`.
 - If updates are only to the modules directory, restart the Node-RED instance: `docker-compose restart node-red`.
+
+## License
+NodeRedForge is released under the [MIT License](/LICENSE).
