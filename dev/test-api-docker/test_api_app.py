@@ -6,7 +6,7 @@ from nodered_forge import NodeForgeApp, NodeParameter, InputType
 
 flask_app = Flask(__name__)
 nodered_api = NodeForgeApp(
-    "TestTodoApi", "http://test_api:5000", default_icon="fa-check-square-o", authentication=True,
+    "TestApp", "http://test-app:5000", default_icon="fa-check-square-o", authentication=True,
     global_parameters_config=[
         NodeParameter(name="pretty", type=InputType.BOOL, default=True, url_param=True),
         # NodeParameter(name="nothing", type=InputType.STR, default="walop", url_param=True)
